@@ -1,7 +1,7 @@
 pro month_plan_Jul2019
 
-  read_month_plan,'RG_MonthPlan_2019-07_v01.txt', key='[seance]', root='/Users/krivonos/Work/SRG/month'
-  read_month_plan,'RG_MonthPlan_2019-07_v01.txt', key='[correction]', root='/Users/krivonos/Work/SRG/month'
+  read_month_plan,'RG_MonthPlan_2019-07_v01.txt', key='[seance]'
+  read_month_plan,'RG_MonthPlan_2019-07_v01.txt', key='[correction]'
   print
   ;; filename for output
   fout='RG_MonthPlan_2019-07_v01.fits'
