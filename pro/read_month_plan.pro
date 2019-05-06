@@ -11,7 +11,7 @@ pro read_month_plan, filename, key=key, root=root
   endif
   
   file=root+'/'+filename
-  if not (file_exist(file)) then message,'Month plan not found '+file
+  if not (file_test(file)) then message,'Month plan not found '+file
 
   nlines = FILE_LINES(file)
   sarr = STRARR(nlines)
