@@ -40,21 +40,43 @@
 ;
 ;-
 
-pro art_make_aster_v2, ra, dec, pa, key=key, pexp=pexp, beta=beta, exposures_min=exposures_min
+;; //------------------------------------------------------------------
+;; [observation]
+;; // Second Observation of Cyg X-1
+;; // Data from preliminary scientific program Appendix 1 Line 3
+;; GUID = d051c8f9-0441-4968-9ce5-59a780f786a3
+;; START = 26.04.2019 19:00:00
+;; STOP = 27.04.2019 23:00:00
+;; EXPERIMENT = 000000003
+;; RA = 299,59033300	// J2000
+;; DEC = +35,20160000	// J2000
+;; ROLL_ANGLE = 000,0	// Reference value
+;; SUN_XOZ_ANGLE = +10,0
+;; //------------------------------------------------------------------
+
+
+pro art_make_aster_v2, ra, dec, pa, key=key, print_key=print_key, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date_obs=date_obs, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem
 
   @art
 
+  if(n_elements(SUN_XOZ_ANGLE) eq 0) then SUN_XOZ_ANGLE=+10.0
+  if(n_elements(ROLL_ANGLE) eq 0) then ROLL_ANGLE=0.0
   if(n_elements(key) eq 0) then key='art_aster'
+  if(n_elements(stem) eq 0) then message,'Please provide main numbers for obsid'
+  if(n_elements(print_key) eq 0) then print_key=''
   if(n_elements(pexp) eq 0) then pexp=20
   if(n_elements(beta) eq 0) then beta=45
-
-  offset = [-50.0, -40.0, $
-            -30.0, -24.0, -20.0, -18.0, $
-            -15.0, -12.0, -9.0, -7.0, -5.0, -3.0, -1.0, $
-            0.0, $
-            1.0, 3.0, 5.0, 7.0,  9.0, 12.0, 15.0, $
-            18.0, 20.0, 24.0, 30.0, $
-            40.0, 50.0]
+  if(n_elements(month_plan) eq 0) then month_plan=''
+  if(n_elements(date_obs) eq 0) then date_obs=[2019, 06, 21, 0, 0]
+  
+  if(n_elements(offset) eq 0) then $
+     offset = [-50.0, -40.0, $
+               -30.0, -24.0, -20.0, -18.0, $
+               -15.0, -12.0, -9.0, -7.0, -5.0, -3.0, -1.0, $
+               0.0, $
+               1.0, 3.0, 5.0, 7.0,  9.0, 12.0, 15.0, $
+               18.0, 20.0, 24.0, 30.0, $
+               40.0, 50.0]
 
   noff=n_elements(offset)
   if(n_elements(exposures_min) ne 0) then begin
@@ -75,7 +97,9 @@ pro art_make_aster_v2, ra, dec, pa, key=key, pexp=pexp, beta=beta, exposures_min
   nrays=4
   beta=45
   alpha=INDGEN(nrays,/DOUBLE)*beta  
-  
+
+  juldate, date_obs, mjd_obs
+
   art=LONARR(art_strip_num,art_strip_num)
   art_make_header, ra, dec, pa, astr=astr, hdr=hdr, bitpix=3
   writefits, key+'.img',art,hdr
@@ -90,15 +114,24 @@ pro art_make_aster_v2, ra, dec, pa, key=key, pexp=pexp, beta=beta, exposures_min
 ;;  printf,dat,new_ra,new_dec,pa,pexp, format='(2f12.6,2f10.2)'
 ;;  printf,reg,'fk5;circle(',new_ra,',',new_dec,',',art_pix/2,') # text={'+String(pexp,format='(i2)')+'}'
 
+  m2d = 1.0d/(60.0d*24.0d)
   total=0L
   seq=1
   for k=0L, n_elements(alpha)-1 do begin
      art_scan_rot, alpha(k)*dr, offset=offset, prot_x=prot_x, prot_y=prot_y  
      xy2ad,prot_x-1.0,prot_y-1.0,astr,new_ra,new_dec
      for i=0L,n_elements(offset)-1 do begin
+
+        mjd_t1 = total*m2d + mjd_obs
+        mjd_t2 = total*m2d + mjd_obs + exposures_min[i]*m2d
+        print,new_ra(i),new_dec(i),exposures_min[i],' ',mjd_t1,mjd_t2
+        total+=exposures_min[i]
+
+        print_month_plan,mjd_t1,mjd_t2,print_key,stem,seq,new_ra(i),new_dec(i),ROLL_ANGLE,SUN_XOZ_ANGLE,month_plan=month_plan
+
         printf,dat,seq,(k+1),(i+1),new_ra(i),new_dec(i), pa, exposures_min[i], format='(3i3, 2f12.6,2f10.2)'
         printf,reg,'fk5;circle(',new_ra(i),',',new_dec(i),',',art_pix/2,') # text={'+String(exposures_min[i],format='(i2)')+'}'
-        total+=exposures_min[i]
+
         seq++
      endfor
   endfor

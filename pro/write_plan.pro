@@ -1,7 +1,12 @@
-pro write_plan,filename=filename, append=append, table=table
+pro write_plan,filename=filename, append=append, table=table, info=info, title=title
+  @art
   if(n_elements(append) eq 0) then append=0  
   if not (append) then file_delete,filename,/ALLOW_NONEXISTENT
+
   FXBHMAKE, hdr, n_elements(a), 'OBSERVATION'
+  ;;sxaddpar, hdr, 'OBSMODE', 'OBSERVATION', ' Possible values: OBSERVATION, SCAN, SURVEY'
+  
+  sxaddpar, hdr, 'TUNIT1', 'str', 'scan (F), survey (S), observation (P)'
   sxaddpar, hdr, 'TUNIT1', 'deg', 'J2000'
   sxaddpar, hdr, 'TUNIT2', 'deg', 'J2000'
   sxaddpar, hdr, 'TUNIT3', 'obsid', 'obsid'
@@ -10,8 +15,26 @@ pro write_plan,filename=filename, append=append, table=table
   sxaddpar, hdr, 'TUNIT6', 'min', 'Exposure in minutes'
   sxaddpar, hdr, 'TUNIT7', 'deg', 'ROLL angle'
   sxaddpar, hdr, 'TUNIT8', 'deg', 'SUN X0Z angle'
-  sxaddhist,["This is a comment line to put in the header", $
-             "And another comment"],hdr,/comment
+  if(n_elements(title) ne 0) then begin
+     sxaddpar, hdr, 'TITLE', title, 'Description'
+  endif
+
+  jd_sys=systime(/JULIAN, /UTC)
+  CALDAT, jd_sys, Month , Day , Year , Hour , Minute , Second
+  str_sys=String(Day, '.', Month, '.', Year, Hour+MSK, ':', Minute, ':', round(Second), $
+                 format='(i02,a,i02,a,i04,1x,i02,a,i02,a,i02)')
+  sxaddpar, hdr, 'GENTIME', str_sys, ' Creation Date and Time in UTC+3 (MSK)'
+     
+  if(n_elements(info) ne 0) then begin
+     sxaddpar, hdr, 'PROJECT', info.project, ' Project'
+     sxaddpar, hdr, 'INSTITUT', info.institut, ' Affiliation'
+     sxaddpar, hdr, 'AUTHOR', info.author, ' Responsible person'
+     sxaddpar, hdr, 'EMAIL', info.email, ' E-mail'
+     sxaddpar, hdr, 'START', info.start, ' Start date'
+     sxaddpar, hdr, 'STOP', info.stop, ' Stop date'
+     sxaddpar, hdr, 'VERSION', info.version, ' Version'
+     sxaddpar, hdr, 'PLANNING', info.PLANNING_TERM, ' PLANNING_TERM'
+  endif
   MWRFITS, table, filename, hdr
 
   ;; delete table

@@ -30,3 +30,10 @@ art_oa_y=24.5
 
 ; Pixel angular size, deg
 art_pix=atan(art_strip_step/art_focus_mm)*rd
+
+;; June 21, 2019
+MJD_LAUNCH=58655.0
+JD_LAUNCH=2458655.5
+MSK=3
+m2d = 1.0d/(60.0d*24.0d)
+d2m = (60.0d*24.0d)
