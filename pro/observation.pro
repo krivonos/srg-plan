@@ -1,10 +1,12 @@
-function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, shift=shift, table=table, create=create, tol=tol, $
-                     roll_angle=roll_angle, sun_x0z_angle=sun_x0z_angle, target=target
+function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
+                     shift=shift, table=table, create=create, tol=tol, $
+                     roll_angle=roll_angle, sun_x0z_angle=sun_x0z_angle, target=target, ignore_seance=ignore_seance
   @art
   COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name
 
 
   if(n_elements(target) eq 0) then target=''  
+  if(n_elements(ignore_seance) eq 0) then ignore_seance=1  
   if(n_elements(roll_angle) eq 0) then roll_angle=0.0  
   if(n_elements(sun_x0z_angle) eq 0) then sun_x0z_angle=0.0  
   if(n_elements(create) eq 0) then create=0  
@@ -19,7 +21,10 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, shift=sh
   print_mjd_utc, mjd_obs, shift=shift, texp=texp, start=start, stop=stop, mjd_t1=mjd_t1, mjd_t2=mjd_t2
   print,'>>',obsid,' ',start,' ',stop,' ',target
 
- 
+  if(ignore_seance) then begin
+     push_table, ra, dec, obsid, start, stop, texp, roll_angle, sun_x0z_angle, table=table, create=create, target=target
+     return,(shift+texp)
+  endif
   
   istart=-1L
   istop=-1L

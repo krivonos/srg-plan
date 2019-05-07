@@ -4,7 +4,7 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
   if not (append) then file_delete,filename,/ALLOW_NONEXISTENT
 
   FXBHMAKE, hdr, n_elements(a), 'OBSERVATION'
-  ;;sxaddpar, hdr, 'OBSMODE', 'OBSERVATION', ' Possible values: OBSERVATION, SCAN, SURVEY'
+  sxaddpar, hdr, 'OBSMODE', 'OBSERVATION', ' Possible values: OBSERVATION, SCAN, SURVEY'
   
   sxaddpar, hdr, 'TUNIT1', 'str', 'scan (F), survey (S), observation (P)'
   sxaddpar, hdr, 'TUNIT1', 'deg', 'J2000'
@@ -35,6 +35,7 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
      sxaddpar, hdr, 'VERSION', info.version, ' Version'
      sxaddpar, hdr, 'PLANNING', info.PLANNING_TERM, ' PLANNING_TERM'
   endif
+  print,'Write file: ',filename
   MWRFITS, table, filename, hdr
 
   ;; delete table
