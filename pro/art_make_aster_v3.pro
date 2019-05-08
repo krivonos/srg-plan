@@ -55,7 +55,7 @@
 ;; //------------------------------------------------------------------
 
 
-pro art_make_aster_v3, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table
+pro art_make_aster_v3, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift
 
   @art
 
@@ -116,7 +116,7 @@ pro art_make_aster_v3, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
   m2d = 1.0d/(60.0d*24.0d)
   total=0L
   seq=1
-  shift=0.0d
+  ;;shift=0.0d
   for k=0L, n_elements(alpha)-1 do begin
      art_scan_rot, alpha(k)*dr, offset=offset, prot_x=prot_x, prot_y=prot_y  
      xy2ad,prot_x-1.0,prot_y-1.0,astr,new_ra,new_dec
