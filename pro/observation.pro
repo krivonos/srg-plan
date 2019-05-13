@@ -7,8 +7,8 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
 
   if(n_elements(target) eq 0) then target=''  
   if(n_elements(ignore_seance) eq 0) then ignore_seance=1  
-  if(n_elements(roll_angle) eq 0) then roll_angle=0.0  
-  if(n_elements(sun_x0z_angle) eq 0) then sun_x0z_angle=0.0  
+  if(n_elements(roll_angle) eq 0) then roll_angle=0.0d  
+  if(n_elements(sun_x0z_angle) eq 0) then sun_x0z_angle=0.0d  
   if(n_elements(create) eq 0) then create=0  
   if(n_elements(tol) eq 0) then tol=60 ;; tolerance in minutes  
 
