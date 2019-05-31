@@ -14,11 +14,20 @@ pro read_month_plan, filename, key=key, root=root
   if not (file_test(file)) then message,'Month plan not found '+file
 
   nlines = FILE_LINES(file)
-  sarr = STRARR(nlines)
+  record = STRARR(nlines)
   OPENR, unit, file,/GET_LUN
-  READF, unit, sarr
+  READF, unit, record
   FREE_LUN, unit
 
+  ;; remove comments
+  sarr=[]
+  for i=0L, N_ELEMENTS(record)-1 do begin
+     res = record[i].StartsWith('//') 
+     if not (res) then begin
+        push,sarr,record[i]
+     endif
+  endfor
+  
   if (n_elements(mjd_start) eq 0) then begin
      mjd_start=[]
      mjd_stop=[]
@@ -35,7 +44,7 @@ pro read_month_plan, filename, key=key, root=root
         str_start=strtrim(sarr[i+2],1)
         str_stop=sarr[i+3]
         str_stations=sarr[i+4]
-        str_comm=sarr[i+5]
+        ;;str_comm=sarr[i+5]
 
         start_value = STRMID(str_start, strpos(str_start,'=')+2)
         stop_value = STRMID(str_stop, strpos(str_stop,'=')+2)

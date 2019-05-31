@@ -34,18 +34,17 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
   icover=-1L
   for i=0L, n_elements(mjd_start)-1 do begin
      if(mjd_t1 gt mjd_start[i] and mjd_t1 le mjd_stop[i]) then istart=i
-     if(mjd_t2 gt mjd_start[i] and mjd_t2 le mjd_stop[i]) then begin
-        istop=i
-     endif
-     if(mjd_t1 le mjd_start[i] and mjd_t2 gt mjd_stop[i]) then begin
-        if(icover ge 0) then begin
-           print,' *** WARNING: Multiple cover case, logic not defined, skip... ***'
-           print
-           push_table, ra, dec, obsid, start, stop, texp, roll_angle, sun_x0z_angle, table=table, create=create, target=target
-           return,(shift+texp)
-        endif
-        icover=i
-     endif
+     if(mjd_t2 gt mjd_start[i] and mjd_t2 le mjd_stop[i]) then istop=i
+     
+;;     if(mjd_t1 le mjd_start[i] and mjd_t2 gt mjd_stop[i]) then begin
+;;        if(icover ge 0) then begin
+;;           print,' *** WARNING: Multiple cover case, logic not defined, skip... ***'
+;;           print
+;;           push_table, ra, dec, obsid, start, stop, texp, roll_angle, sun_x0z_angle, table=table, create=create, target=target
+;;           return,(shift+texp)
+;;        endif
+;;        icover=i
+;;     endif
   endfor
 
   if(istart ge 0) then begin
