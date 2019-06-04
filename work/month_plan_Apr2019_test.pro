@@ -18,10 +18,10 @@ pro month_plan_Apr2019_test
   ;; fout='RG_MonthPlan_2019-04_v01.fits'
 
   timezero = JULDAY(1, 1, 2000, 0, 0, 0)
-  jd_start=JULDAY(1, 4, 2019, 0, 0, 0)
-  jd_stop=JULDAY(2, 5, 2019, 0, 0, 0)
-  dt1=(jd_start-timezero)*86400L
-  dt2=(jd_stop-timezero)*86400L
+  jd_start = JULDAY(4, 1, 2019, 0, 0, 0)
+  jd_stop  = JULDAY(5, 2, 2019, 0, 0, 0)
+  dt1 = (jd_start - timezero)*86400L
+  dt2 = (jd_stop  - timezero)*86400L
   
   ;; filename for output
   ;; P_PLAN_190122_613105205_617231359_<POSTFIX>.fits
@@ -29,8 +29,8 @@ pro month_plan_Apr2019_test
   CALDAT, jd_today, Month , Day , Year , Hour , Minute , Second
   yr=String(year,format='(i04)')
   dt=(jd_today-timezero)*86400
-  fout='P_PLAN_'+STRMID(yr, 2, 2)+String(Month,format='(i02)')+String(Day,format='(i02)')+'_'+$
-       String(dt1,format='(i09)')+'_'+String(dt2,format='(i09)')+'_2.fits'
+  fout='T_PLAN_'+STRMID(yr, 2, 2)+String(Month,format='(i02)')+String(Day,format='(i02)')+'_'+$
+       String(dt1,format='(i09)')+'_'+String(dt2,format='(i09)')+'_RK.fits'
 
 
   info={INFO, PROJECT:'SRG', INSTITUT:'IKI', $
@@ -41,10 +41,22 @@ pro month_plan_Apr2019_test
   ;; LMC X-4
   ;;
   target='LMC X-4 first light'
-  date=[2019, 4, 1, 20, 00]
+  date=[2019, 4, 13, 1, 30]
   shift=0.0d
 
-  shift=observation(date=date, texp=1440, ra=83.192083d, dec=-66.3675d, obsid='10011001000', shift=shift, table=table, target='LMC X-4 first light')
+  texp=1440/3
+  shift=observation(date=date, texp=texp*2, ra=83.192083d, dec=-66.3675d, obsid='10011001000', shift=shift, table=table, target='LMC X-4 first light')
+  shift=observation(date=date, texp=texp*2, ra=84.911d, dec=-69.746d, obsid='10011001001', shift=shift, table=table, target='LMC X-1')
+  shift=observation(date=date, texp=texp, ra=126.029d, dec=-42.997d, obsid='10011001002', shift=shift, table=table, target='Puppis A')
+  shift=observation(date=date, texp=texp, ra=6.022329d, dec=-72.081444d, obsid='10011001003', shift=shift, table=table, target='NGC 104')
+  shift=observation(date=date, texp=texp, ra=121.595833d, dec=-41.375833d, obsid='10011001004', shift=shift, table=table, target='1RXS J080623.0-412233')
+  shift=observation(date=date, texp=texp, ra=89.947466d, dec=-50.447785d, obsid='10011001005', shift=shift, table=table, target='PKS 0558-504')
+  shift=observation(date=date, texp=texp, ra=255.9312d, dec=78.7175d, obsid='10011001006', shift=shift, table=table, target='A2256')
+  shift=observation(date=date, texp=texp, ra=248.620799d, dec=70.525665d, obsid='10011001007', shift=shift, table=table, target='PG 1634+706')
+  shift=observation(date=date, texp=texp, ra=47.980209d, dec=-76.864124d, obsid='10011001008', shift=shift, table=table, target='PKS 0312-770')
+  shift=observation(date=date, texp=texp*2, ra=19.291d, dec=-73.447d, obsid='10011001009', shift=shift, table=table, target='SMC X-1')
+  shift=observation(date=date, texp=texp, ra=85.04516d, dec=-69.33173d, obsid='10011001010', shift=shift, table=table, target='PSR B0540-69')
+  shift=observation(date=date, texp=texp, ra=96.5642d, dec=-53.6811d, obsid='10011001011', shift=shift, table=table, target='A3391')
  
   ;; 
   ;; SMC X-1 aster
@@ -91,19 +103,8 @@ pro month_plan_Apr2019_test
                    t4min]   ;; +40
 
   art_make_aster_v3, ra, dec, key=key, target=target, offset=offset, beta=45, $
-                     exposures_min=exposures_min*5, table=table, date=date, stem=stem, shift=shift
+                     exposures_min=exposures_min, table=table, date=date, stem=stem, shift=shift
 
-  shift=observation(date=date, texp=1440, ra=84.911d, dec=-69.746d, obsid='10011001001', shift=shift, table=table, target='LMC X-1')
-  shift=observation(date=date, texp=1440, ra=126.029d, dec=-42.997d, obsid='10011001002', shift=shift, table=table, target='Puppis A')
-  shift=observation(date=date, texp=1440, ra=6.022329d, dec=-72.081444d, obsid='10011001003', shift=shift, table=table, target='NGC 104')
-  shift=observation(date=date, texp=1440, ra=121.595833d, dec=-41.375833d, obsid='10011001004', shift=shift, table=table, target='1RXS J080623.0-412233')
-  shift=observation(date=date, texp=1440, ra=89.947466d, dec=-50.447785d, obsid='10011001005', shift=shift, table=table, target='PKS 0558-504')
-  shift=observation(date=date, texp=1440, ra=255.9312d, dec=78.7175d, obsid='10011001006', shift=shift, table=table, target='A2256')
-  shift=observation(date=date, texp=1440, ra=248.620799d, dec=70.525665d, obsid='10011001007', shift=shift, table=table, target='PG 1634+706')
-  shift=observation(date=date, texp=1440, ra=47.980209d, dec=-76.864124d, obsid='10011001008', shift=shift, table=table, target='PKS 0312-770')
-  shift=observation(date=date, texp=1440, ra=19.291d, dec=-73.447d, obsid='10011001009', shift=shift, table=table, target='SMC X-1')
-  shift=observation(date=date, texp=1440, ra=85.04516d, dec=-69.33173d, obsid='10011001010', shift=shift, table=table, target='PSR B0540-69')
-  shift=observation(date=date, texp=1440, ra=96.5642d, dec=-53.6811d, obsid='10011001011', shift=shift, table=table, target='A3391')
 
   write_plan,filename=fout, table=table, info=info
 
