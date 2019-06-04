@@ -1,5 +1,10 @@
 pro write_plan,filename=filename, append=append, table=table, info=info, title=title
+
+  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
+  COMMON IKI, iki_version
+
   @art
+  
   if(n_elements(append) eq 0) then append=0  
   if not (append) then file_delete,filename,/ALLOW_NONEXISTENT
 
@@ -30,9 +35,9 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
      sxaddpar, hdr, 'INSTITUT', info.institut, ' Affiliation'
      sxaddpar, hdr, 'AUTHOR', info.author, ' Responsible person'
      sxaddpar, hdr, 'EMAIL', info.email, ' E-mail'
-     sxaddpar, hdr, 'START', info.start, ' Start date'
-     sxaddpar, hdr, 'STOP', info.stop, ' Stop date'
-     sxaddpar, hdr, 'VERSION', info.version, ' Version'
+     sxaddpar, hdr, 'START', hdr_start, ' Start date'
+     sxaddpar, hdr, 'STOP', hdr_stop, ' Stop date'
+     sxaddpar, hdr, 'VERSION', iki_version, ' Version'
      sxaddpar, hdr, 'PLANNING', info.PLANNING_TERM, ' PLANNING_TERM'
   endif
   print,'Write file: ',filename

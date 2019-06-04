@@ -1,6 +1,6 @@
 pro read_month_plan, filename, key=key, root=root
 
-  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name
+  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
   
   if(n_elements(root) eq 0) then begin 
      root=getenv('SRG_MONTH_PLAN_NPOL')
@@ -35,6 +35,29 @@ pro read_month_plan, filename, key=key, root=root
      seance_name=[]
   endif
   id=1L
+
+  ;;
+  ;; read header
+  ;;
+  i0=0L
+  hdr_name_STR=sarr[i0]
+  HDR_GUID_STR = sarr[i0+1] 
+  HDR_PROJECT_STR = sarr[i0+2]
+  HDR_PLANNING_TERM_STR = sarr[i0+3]
+  HDR_START_STR = sarr[i0+4]
+  HDR_STOP_STR  = sarr[i0+5]
+  HDR_VERSION_STR = sarr[i0+6]
+  HDR_GENTIME_STR = sarr[i0+7]
+  HDR_AUTHOR_STR = sarr[i0+8]
+  hdr_start = STRMID(hdr_start_str, strpos(hdr_start_str,'=')+2)
+  hdr_stop  = STRMID(hdr_stop_str, strpos(hdr_stop_str,'=')+2)
+
+  print
+  print,hdr_name_str
+  print,hdr_start
+  print,hdr_stop
+  print
+  
   
   for i=0L, N_ELEMENTS(sarr)-1 do begin
      res = STRCMP(sarr[i], key)

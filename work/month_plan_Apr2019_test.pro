@@ -1,41 +1,10 @@
 pro month_plan_Apr2019_test
-
-  read_month_plan,'RG_MonthPlan_2019-04_v01.txt', key='[seance]'
-  read_month_plan,'RG_MonthPlan_2019-04_v01.txt', key='[correction]'
   
-
-  print
-
-;; T_PLAN_DATE_TSTART_TSTOP.fits 
-;;
-;; where:
-;;
-;; TSTART, TSTOP:   time period covered by planning file in seconds (nine digits) counted
-;;                                          from 2000-01-01 00:00:00 MSK
-;; DATE:                            date of last update, written as yymmdd
-;; <T>:                               type indicator of file, e.g., "P" for preliminary, "F" for final, "L" for long term.
-
-  ;; fout='RG_MonthPlan_2019-04_v01.fits'
-
-  timezero = JULDAY(1, 1, 2000, 0, 0, 0)
-  jd_start = JULDAY(4, 1, 2019, 0, 0, 0)
-  jd_stop  = JULDAY(5, 2, 2019, 0, 0, 0)
-  dt1 = (jd_start - timezero)*86400L
-  dt2 = (jd_stop  - timezero)*86400L
+  read_month_plan_npol,'RG_MonthPlan_2019-04_v01.txt'
   
-  ;; filename for output
-  ;; P_PLAN_190122_613105205_617231359_<POSTFIX>.fits
-  jd_today=SYSTIME(/JULIAN, /UTC)
-  CALDAT, jd_today, Month , Day , Year , Hour , Minute , Second
-  yr=String(year,format='(i04)')
-  dt=(jd_today-timezero)*86400
-  fout='T_PLAN_'+STRMID(yr, 2, 2)+String(Month,format='(i02)')+String(Day,format='(i02)')+'_'+$
-       String(dt1,format='(i09)')+'_'+String(dt2,format='(i09)')+'_RK.fits'
-
-
-  info={INFO, PROJECT:'SRG', INSTITUT:'IKI', $
-        AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru', $
-        START:'01.04.2019', STOP:'02.05.2019',VERSION:'01',PLANNING_TERM:'month'}
+  fout=make_output_filename(prefix='T',postfix='RK_V1',version='01')
+  
+  info={INFO, PROJECT:'SRG', INSTITUT:'IKI', AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru',PLANNING_TERM:'month'}
 
   ;;
   ;; LMC X-4
@@ -104,7 +73,6 @@ pro month_plan_Apr2019_test
 
   art_make_aster_v3, ra, dec, key=key, target=target, offset=offset, beta=45, $
                      exposures_min=exposures_min, table=table, date=date, stem=stem, shift=shift
-
 
   write_plan,filename=fout, table=table, info=info
 

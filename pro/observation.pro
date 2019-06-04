@@ -3,7 +3,7 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
                      roll_angle=roll_angle, sun_x0z_angle=sun_x0z_angle, $
                      target=target, ignore_seance=ignore_seance, ignore_correction=ignore_correction
   @art
-  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name
+  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
 
 
   if(n_elements(target) eq 0) then target=''  
