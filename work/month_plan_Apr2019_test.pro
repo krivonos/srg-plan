@@ -2,7 +2,7 @@ pro month_plan_Apr2019_test
   
   read_month_plan_npol,'RG_MonthPlan_2019-04_v01.txt'
   
-  fout=make_output_filename(prefix='T',postfix='RK_V1',version='01')
+  fout=make_output_filename(prefix='T',postfix='RK',version='01')
   
   info={INFO, AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru'}
 
