@@ -4,7 +4,7 @@ pro month_plan_Apr2019_test
   
   fout=make_output_filename(prefix='T',postfix='RK_V1',version='01')
   
-  info={INFO, PROJECT:'SRG', INSTITUT:'IKI', AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru',PLANNING_TERM:'month'}
+  info={INFO, AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru'}
 
   ;;
   ;; LMC X-4

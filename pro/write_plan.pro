@@ -31,14 +31,14 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
   sxaddpar, hdr, 'GENTIME', str_sys, ' Creation Date and Time in UTC+3 (MSK)'
      
   if(n_elements(info) ne 0) then begin
-     sxaddpar, hdr, 'PROJECT', info.project, ' Project'
-     sxaddpar, hdr, 'INSTITUT', info.institut, ' Affiliation'
+     sxaddpar, hdr, 'PROJECT', 'SRG', ' Project'
+     sxaddpar, hdr, 'INSTITUT', 'IKI', ' Affiliation'
      sxaddpar, hdr, 'AUTHOR', info.author, ' Responsible person'
      sxaddpar, hdr, 'EMAIL', info.email, ' E-mail'
      sxaddpar, hdr, 'START', hdr_start, ' Start date'
      sxaddpar, hdr, 'STOP', hdr_stop, ' Stop date'
      sxaddpar, hdr, 'VERSION', iki_version, ' Version'
-     sxaddpar, hdr, 'PLANNING', info.PLANNING_TERM, ' PLANNING_TERM'
+     sxaddpar, hdr, 'PLANNING', 'month', ' PLANNING_TERM'
   endif
   print,'Write file: ',filename
   MWRFITS, table, filename, hdr
