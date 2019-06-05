@@ -2,7 +2,7 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
 
   COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
   COMMON IKI, iki_version
-
+  
   @art
   
   if(n_elements(append) eq 0) then append=0  
