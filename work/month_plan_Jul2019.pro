@@ -1,21 +1,21 @@
-pro month_plan_Jul2019
+pro month_plan_Jul2019_va
 
-  read_month_plan_npol,'RG_MonthPlan_2019-07_v01.txt'
+  read_month_plan_npol,'RG_MonthPlan_2019-07_v03.txt'
   
-  fout=make_output_filename(prefix='P',postfix='RK',version='01')
+  fout=make_output_filename(prefix='P',postfix='VA',version='01')
   
-  info={INFO, AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru'}
+  info={INFO, AUTHOR:'Vadim Arefiev', EMAIL:'arefiev@cosmos.ru'}
 
   ;;
   ;; XBootes
   ;;
   target='XBootes field'
-  stem='00001001';; + counter 000
-  date=[2019, 07, 2, 21, 30]
+  stem='0191001';; + counter 00
+  date=[2019, 07, 24, 2, 0]
   grid=[{ra:218.0d, dec:34.1d, texp:1440L},$
         {ra:218.0d, dec:34.1d, texp:1440L},$
         {ra:218.0d, dec:34.1d, texp:1440L},$
-        {ra:218.0d, dec:34.1d, texp:1440L},$
+        ;;{ra:218.0d, dec:34.1d, texp:1440L},$
         {ra:218.0d, dec:34.1d, texp:1440L},$
         {ra:218.0d, dec:34.1d, texp:1440L},$
         {ra:218.0d, dec:34.1d, texp:1440L},$
@@ -23,14 +23,14 @@ pro month_plan_Jul2019
 
   shift=0.0d
   for i=0L, n_elements(grid)-1 do begin
-     obsid=String(stem,i+1,format='(a,i03)')
+     obsid=String(stem,i+1,format='(a,i02)')
      shift=observation(date=date, texp=grid[i].texp, ra=grid[i].ra, dec=grid[i].dec, obsid=obsid, shift=shift, table=table, target=target)
   endfor
   
   ;;
   ;; insert individual XBootes observation untill correction
   ;; 
-  shift=observation(date=date, texp=1080, ra=218.0d, dec=34.1d, obsid='00001001009', shift=shift, table=table, target='XBootes field end')
+  shift=observation(date=date, texp=950, ra=218.0d, dec=34.1d, obsid='019100108', shift=shift, table=table, target='XBootes field end')
 
   ;;
   ;; insert individual Cen X-3 FIRST LIGHT observation RIGHT AFTER correction
@@ -41,9 +41,11 @@ pro month_plan_Jul2019
   ;; STOP  = 11.07.2019 19:07:10
   ;; IMPSTART  = 11.07.2019 17:17:10
 
-  date=[2019, 07, 12, 0, 0]
+  date=[2019, 08, 1, 15, 0]
   shift=0.0d
-  shift=observation(date=date, texp=1290, ra=170.04282d, dec=-60.75630d, obsid='10011001000', shift=shift, table=table, target='Cen X-3 first light')
+  shift=observation(date=date, texp=1560, ra=170.04282d, dec=-60.75630d, obsid='119100100', shift=shift, table=table, target='Cen X-3 first light')
+
+
   
   ;;
   ;; Cen X-3 alignment, right after this seance:
@@ -55,8 +57,8 @@ pro month_plan_Jul2019
   ;; STATIONS = Ussur., Baykonur, MeOz
 
   target='Cen X-3 align.'
-  stem='10011001';; root for obsid +000
-  date=[2019, 07, 12, 21, 30]
+  stem='1191001';; root for obsid +000
+  date=[2019, 08, 2, 21, 0]
   shift=0.0d
   texp=130L
   grid=[{ra:170.04282d, dec:-60.75630d, texp:texp},$
@@ -71,9 +73,13 @@ pro month_plan_Jul2019
 
   shift=0.0d
   for i=0L, n_elements(grid)-1 do begin
-     obsid=String(stem,i+1,format='(a,i03)')
+     obsid=String(stem,i+1,format='(a,i02)')
      shift=observation(date=date,ra=grid[i].ra, dec=grid[i].dec, texp=grid[i].texp,  obsid=obsid, shift=shift, table=table, target=target)
   endfor
+
+  write_plan,filename=fout, table=table, title='July 2019', info=info
+  return
+
 
   ;;
   ;; Init UDS field
