@@ -29,7 +29,7 @@ function make_output_filename,prefix=prefix,postfix=postfix,version=version
   dt=(jd_today-timezero)*86400
   
   fout=prefix+'_PLAN_'+STRMID(yr, 2, 2)+String(Month,format='(i02)')+String(Day,format='(i02)')+'_'+$
-       String(dt1,format='(i09)')+'_'+String(dt2,format='(i09)')+'_'+postfix+'.fits'
+       String(dt1,format='(i09)')+'_'+String(dt2,format='(i09)')+'_'+postfix+'_v'+iki_version+'.fits'
   print
   print,'Output filename: ',fout
   print
