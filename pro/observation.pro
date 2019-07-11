@@ -12,7 +12,9 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
   if(n_elements(roll_angle) eq 0) then roll_angle=0.0d  
   if(n_elements(sun_x0z_angle) eq 0) then sun_x0z_angle=0.0d  
   if(n_elements(create) eq 0) then create=0  
-  if(n_elements(tol) eq 0) then tol=60 ;; tolerance in minutes  
+  if(n_elements(tol) eq 0) then tol=60 ;; tolerance in minutes
+
+  ;;print,'Using tolerance = ',tol
 
   juldate, date, mjd_obs
   ;; correct MJD by 0.5 to be consistent with HEASARC
@@ -101,11 +103,13 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
      print,seance_name[istop],seance_id[istop],' --> case 2: end of observation falls in the ground session'
      mytol=(mjd_start[istop]-mjd_t1)*d2m
      if(mytol lt tol) then begin
+        print,'--> tolerance ',mytol
         print,'--> shift observation to the end of ',seance_name[istop],seance_id[istop]
         print
         shift+=(mjd_stop[istop]-mjd_t1)*d2m
         print_mjd_utc, mjd_obs, shift=shift, texp=texp, start=start, stop=stop, mjd_t1=mjd_t1, mjd_t2=mjd_t2
      endif else begin
+        print,'--> tolerance ',mytol
         print,'--> divide observation in two parts'
         print
         print_mjd_utc, mjd_obs, shift=shift, texp=mytol, start=start, stop=stop, mjd_t1=mjd_t1, mjd_t2=mjd_t2

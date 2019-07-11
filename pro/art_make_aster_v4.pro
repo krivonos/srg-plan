@@ -55,7 +55,7 @@
 ;; //------------------------------------------------------------------
 
 
-pro art_make_aster_v3, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift
+pro art_make_aster_v4, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift, startstem=startstem, ignore_seance=ignore_seance, tol=tol
 
   @art
 
@@ -66,6 +66,8 @@ pro art_make_aster_v3, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
   if(n_elements(target) eq 0) then target=''
   if(n_elements(pexp) eq 0) then pexp=20
   if(n_elements(beta) eq 0) then beta=45
+  if(n_elements(startstem) eq 0) then startstem=1
+
   if(n_elements(date) eq 0) then date=[2019, 06, 21, 0, 0]
   
   if(n_elements(offset) eq 0) then $
@@ -121,8 +123,8 @@ pro art_make_aster_v3, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
      art_scan_rot, alpha(k)*dr, offset=offset, prot_x=prot_x, prot_y=prot_y  
      xy2ad,prot_x-1.0,prot_y-1.0,astr,new_ra,new_dec
      for i=0L,n_elements(offset)-1 do begin
-        obsid=String(stem,seq,format='(a,i02)')
-        shift=observation(date=date,ra=new_ra(i), dec=new_dec(i), texp=exposures_min[i], obsid=obsid, shift=shift, table=table, target=target)       
+        obsid=String(stem,startstem+k,(i+1),format='(a,i01,i02)')
+        shift=observation(date=date,ra=new_ra(i), dec=new_dec(i), texp=exposures_min[i], obsid=obsid, shift=shift, table=table, target=target, ignore_seance=ignore_seance, tol=tol)       
         
         printf,dat,seq,(k+1),(i+1),new_ra(i),new_dec(i), roll_angle, exposures_min[i], format='(3i3, 2f12.6,2f10.2)'
         printf,reg,'fk5;circle(',new_ra(i),',',new_dec(i),',',art_pix/2,') # text={'+String(exposures_min[i],format='(i2)')+'}'
