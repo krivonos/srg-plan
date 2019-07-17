@@ -23,7 +23,9 @@ pro read_month_plan, filename, key=key, root=root
   sarr=[]
   for i=0L, N_ELEMENTS(record)-1 do begin
      res = record[i].StartsWith('//') 
+     
      if not (res) then begin
+     ;;   print,'push ',res,record[i]
         push,sarr,record[i]
      endif
   endfor

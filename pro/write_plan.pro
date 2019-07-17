@@ -1,4 +1,4 @@
-pro write_plan,filename=filename, append=append, table=table, info=info, title=title
+pro write_plan,filename=filename, append=append, table=table, info=info, title=title, npol=npol
 
   COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
   COMMON IKI, iki_version
@@ -22,6 +22,10 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
   sxaddpar, hdr, 'TUNIT8', 'deg', 'SUN X0Z angle'
   if(n_elements(title) ne 0) then begin
      sxaddpar, hdr, 'TITLE', title, 'Description'
+  endif
+
+  if(n_elements(npol) ne 0) then begin
+     sxaddpar, hdr, 'NPOL', npol, ' NPOL month plan'
   endif
 
   jd_sys=systime(/JULIAN, /UTC)
