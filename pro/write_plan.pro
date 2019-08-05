@@ -1,6 +1,6 @@
 pro write_plan,filename=filename, append=append, table=table, info=info, title=title, npol=npol
 
-  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
+  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop, seance_guid, ra_prev, dec_prev, delta_ra, delta_dec
   COMMON IKI, iki_version
   
   @art
@@ -20,6 +20,8 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
   sxaddpar, hdr, 'TUNIT6', 'min', 'Exposure in minutes'
   sxaddpar, hdr, 'TUNIT7', 'deg', 'ROLL angle'
   sxaddpar, hdr, 'TUNIT8', 'deg', 'SUN X0Z angle'
+  sxaddpar, hdr, 'DELT_RA', delta_ra, 'Delta RA known after allign.'
+  sxaddpar, hdr, 'DELT_DEC', delta_dec, 'Delta Dec known after allign.'
   if(n_elements(title) ne 0) then begin
      sxaddpar, hdr, 'TITLE', title, 'Description'
   endif

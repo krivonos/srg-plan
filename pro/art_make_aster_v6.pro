@@ -55,7 +55,7 @@
 ;; //------------------------------------------------------------------
 
 
-pro art_make_aster_v5, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift, startstem=startstem, ignore_seance=ignore_seance, tol=tol, nrays=nrays
+pro art_make_aster_v6, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift, startstem=startstem, ignore_seance=ignore_seance, tol=tol, nrays=nrays, relax_time=relax_time
 
   @art
 
@@ -65,11 +65,11 @@ pro art_make_aster_v5, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
   if(n_elements(stem) eq 0) then message,'Please provide main numbers for obsid'
   if(n_elements(target) eq 0) then target=''
   if(n_elements(pexp) eq 0) then pexp=20
-  if(n_elements(beta) eq 0) then beta=45
-  if(n_elements(nrays) eq 0) then nrays=4
+  if(n_elements(beta) eq 0) then beta=0
+  if(n_elements(nrays) eq 0) then nrays=1
   if(n_elements(startstem) eq 0) then startstem=1
 
-  if(n_elements(date) eq 0) then date=[2019, 06, 21, 0, 0]
+  if(n_elements(date) eq 0) then message, 'Input date is not provided' ;;date=[2019, 06, 21, 0, 0]
   
   if(n_elements(offset) eq 0) then $
      offset = [-50.0, -40.0, $
@@ -90,15 +90,15 @@ pro art_make_aster_v5, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
   endelse
 
   
-  if not (beta eq 90L or beta eq 60L or beta eq 45L or beta eq 30L) then begin
-     print, 'beta allowed values: 90, 60, 45 or 30'
-     stop
-  endif
+;;  if not (beta eq 90L or beta eq 60L or beta eq 45L or beta eq 30L) then begin
+;;     print, 'beta allowed values: 90, 60, 45 or 30'
+;;     stop
+;;  endif
   
   ;;nrays=360/beta
   ;;nrays=4
-  beta=45
-  alpha=INDGEN(nrays,/DOUBLE)*beta  
+  ;;beta=45
+  alpha=[beta];INDGEN(nrays,/DOUBLE)*beta  
 
   juldate, date, mjd_obs
 
@@ -124,9 +124,9 @@ pro art_make_aster_v5, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
      art_scan_rot, alpha(k)*dr, offset=offset, prot_x=prot_x, prot_y=prot_y  
      xy2ad,prot_x-1.0,prot_y-1.0,astr,new_ra,new_dec
      for i=0L,n_elements(offset)-1 do begin
-        obsid=String(stem,startstem+k,(i+1),format='(a,i01,i03)')
+        obsid=String(stem,startstem+k,(i+1),format='(a,i02,i03)')
         shift=observation(date=date,ra=new_ra(i), dec=new_dec(i), texp=exposures_min[i], obsid=obsid, shift=shift, table=table, $
-                          target=target+String(k+1,format='(i01)')+' offset '+string(offset[i],format='(f6.2)'), ignore_seance=ignore_seance, tol=tol)       
+                          target=target+String(beta,format='(i3)')+' offset '+string(offset[i],format='(f6.2)'), ignore_seance=ignore_seance, tol=tol, relax_time=relax_time)       
         
         printf,dat,seq,(k+1),(i+1),new_ra(i),new_dec(i), roll_angle, exposures_min[i], format='(3i3, 2f12.6,2f10.2)'
         printf,reg,'fk5;circle(',new_ra(i),',',new_dec(i),',',art_pix/2,') # text={'+String(exposures_min[i],format='(i2)')+'}'

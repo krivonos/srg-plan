@@ -1,6 +1,6 @@
 function make_output_filename,prefix=prefix,postfix=postfix,version=version
 
-  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop
+  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop, seance_guid, ra_prev, dec_prev, delta_ra, delta_dec
   COMMON IKI, iki_version
 
   iki_version=version
