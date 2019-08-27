@@ -55,7 +55,10 @@
 ;; //------------------------------------------------------------------
 
 
-pro art_make_aster_v6, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift, startstem=startstem, ignore_seance=ignore_seance, tol=tol, nrays=nrays, relax_time=relax_time
+pro art_make_aster_v6, ra, dec, key=key, target=target, pexp=pexp, beta=beta, exposures_min=exposures_min, offset=offset, date=date, $
+                       month_plan=month_plan,ROLL_ANGLE=ROLL_ANGLE,SUN_XOZ_ANGLE=SUN_XOZ_ANGLE, stem=stem, table=table, shift=shift, $
+                       startstem=startstem, ignore_seance=ignore_seance, tol=tol, nrays=nrays, relax_time=relax_time,$
+                       cat_ra_obj=cat_ra_obj, cat_dec_obj=cat_dec_obj, object=object
 
   @art
 
@@ -126,7 +129,8 @@ pro art_make_aster_v6, ra, dec, key=key, target=target, pexp=pexp, beta=beta, ex
      for i=0L,n_elements(offset)-1 do begin
         obsid=String(stem,startstem+k,(i+1),format='(a,i02,i03)')
         shift=observation(date=date,ra=new_ra(i), dec=new_dec(i), texp=exposures_min[i], obsid=obsid, shift=shift, table=table, $
-                          target=target+String(beta,format='(i3)')+' offset '+string(offset[i],format='(f6.2)'), ignore_seance=ignore_seance, tol=tol, relax_time=relax_time)       
+                          target=target+String(beta,format='(i3)')+' offset '+string(offset[i],format='(f6.2)'), ignore_seance=ignore_seance, tol=tol, relax_time=relax_time,$
+                          cat_ra_obj=cat_ra_obj, cat_dec_obj=cat_dec_obj, object=object)       
         
         printf,dat,seq,(k+1),(i+1),new_ra(i),new_dec(i), roll_angle, exposures_min[i], format='(3i3, 2f12.6,2f10.2)'
         printf,reg,'fk5;circle(',new_ra(i),',',new_dec(i),',',art_pix/2,') # text={'+String(exposures_min[i],format='(i2)')+'}'

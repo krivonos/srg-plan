@@ -20,8 +20,9 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
   sxaddpar, hdr, 'TUNIT6', 'min', 'Exposure in minutes'
   sxaddpar, hdr, 'TUNIT7', 'deg', 'ROLL angle'
   sxaddpar, hdr, 'TUNIT8', 'deg', 'SUN X0Z angle'
-  sxaddpar, hdr, 'DELT_RA', delta_ra, 'Delta RA known after allign.'
-  sxaddpar, hdr, 'DELT_DEC', delta_dec, 'Delta Dec known after allign.'
+  sxaddpar, hdr, 'TUNIT9', 'desc', 'Target field'
+  sxaddpar, hdr, 'TUNIT10', 'deg', 'R.A. Object'
+  sxaddpar, hdr, 'TUNIT11', 'deg', 'Dec Object'
   if(n_elements(title) ne 0) then begin
      sxaddpar, hdr, 'TITLE', title, 'Description'
   endif

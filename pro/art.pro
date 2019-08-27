@@ -32,6 +32,7 @@ art_oa_y=24.5
 art_pix=atan(art_strip_step/art_focus_mm)*rd
 
 ;; June 21, 2019
+MJDREF = 51543.875
 MJD_LAUNCH=58655.0
 JD_LAUNCH=2458655.5
 JD_SHIFT=2400000.5
