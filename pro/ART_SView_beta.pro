@@ -13,44 +13,23 @@
 
 
 
-@ANGLE_BETWEEN_TWO_VECTORS.pro
-@ARRAYS_ARE_SAME_SIZE.pro
-@DOT_PRODUCT.pro
-@MAGNITUDE.pro
-@NORMALIZE.pro
-@REPLICATE_VECTOR.pro
+;;@ANGLE_BETWEEN_TWO_VECTORS.pro
+;;@ARRAYS_ARE_SAME_SIZE.pro
+;;@DOT_PRODUCT.pro
+;;@MAGNITUDE.pro
+;;@NORMALIZE.pro
+;;@REPLICATE_VECTOR.pro
 
 
-pro ART_SView_beta
-forward_function NORM_V
-forward_function GET_ANGLE_VECTORS
+pro ART_SView_beta, year=year, month=month, day=day, hour=hour, min=min, sec=sec, ra=ra, dec=dec, $
+                    art_ra=art_ra, art_dec=art_dec, $
+                    ero_ra=ero_ra, ero_dec=ero_dec
 
+;;forward_function NORM_V
+;;forward_function GET_ANGLE_VECTORS
 
-;;JD = JULDAY(09., 17., 2019., 22., 00., 0.)-3.d0/24.   ; -3/24 in transfer from MSK to UTC
-
-
-;CatPos = [208.621, -59.982]
-;CatPos = [193.241, -63.868 ] 
-;CatPos = [84.342, -84.408 ] 
-;CatPos = [69.492, -72.669] 
-;CatPos = [59.375, -66.043] 
-;CatPos = [267.4854,  -34.1459] 
-
-
-;CatPos = [244.97945, -15.64028]  ; Sco X-1 eROSITA
-;CatPos = [83.836375, -69.31138888]  ;LMC eROSITA
-
-;CatPos = [266.416817, -29.007825] ; GCenter for ART-XC
-;CatPos = [ 85.04516,  -69.33173] ; PSR B0540 for ART-XC
-;CatPos = [ 84.44443,  -69.17141] ; PSR J0537  for ART-XC
-;CatPos = [ 84.76552,  -69.2336] ; GCenter for ART-XC
-
-;;JD = JULDAY(09., 18., 2019., 18., 40., 0.)-3.d0/24.   ; -3/24 in transfer from MSK to UTC
-;;CatPos = [213.291275d, -65.339019d] ; Circinus galaxy for ART-XC
-
-;;JD = JULDAY(09., 19., 2019., 18., 40., 0.)-3.d0/24. ; -3/24 in transfer from MSK to UTC
-JD = JULDAY(09., 20., 2019., 1., 30., 0.)-3.d0/24. ; -3/24 in transfer from MSK to UTC
-CatPos = [235.597347d, -52.385994d] ; 4U 1538-522 for ART-XC
+JD = JULDAY(month, day, year, hour, min, sec)-3.d0/24. ; -3/24 in transfer from MSK to UTC
+CatPos = [ra, dec] ; 4U 1538-522 for ART-XC
 
 
 ;Qcorr = [ -0.0269275087805867d0,      -0.0012974798150874d0,      -0.0010326590297526d0,       0.9996360134730687d0] ; 2-nd release
@@ -193,6 +172,9 @@ CSkyX =CV_COORD(FROM_RECT=VdcXcnew, /TO_SPHERE, /DEGREES)
 ;print, ' ---------- '
 if (CSkyX[0] LT 0.) then CSkyX[0] = 360.+CSkyX[0]
 print, 'ART-XC : ', CSkyX[0], CSkyX[1], CatPos[0], CatPos[1]
+
+art_ra=CSkyX[0]
+art_dec=CSkyX[1]
 
 ;gcirc, 2, CSkyX[0], CSkyX[1], CatPos[0], CatPos[1], distsec
 ;print, distsec/60.

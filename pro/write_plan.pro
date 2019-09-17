@@ -46,6 +46,7 @@ pro write_plan,filename=filename, append=append, table=table, info=info, title=t
      sxaddpar, hdr, 'STOP', hdr_stop, ' Stop date'
      sxaddpar, hdr, 'VERSION', iki_version, ' Version'
      sxaddpar, hdr, 'PLANNING', 'month', ' PLANNING_TERM'
+     sxaddpar, hdr, 'REPLACES', info.replaces, ' Previous version'
   endif
   print,'Write file: ',filename
   MWRFITS, table, filename, hdr

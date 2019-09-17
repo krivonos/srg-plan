@@ -20,8 +20,18 @@ function observation,date=date, texp=texp, ra=ra, dec=dec, obsid=obsid, $
   if(n_elements(tol) eq 0) then tol=60 ;; tolerance in minutes
   if(n_elements(start_with_slew) eq 0) then start_with_slew=1  
 
+  if(n_elements(ra) eq 0 or n_elements(dec) eq 0) then begin
+     ;; date=[2019, 09, 10, 18, 30]
+     ART_SView_beta,month=date[1], day=date[2], year=date[0], hour=date[3], min=date[4], sec=0., $
+                    ra=cat_ra_obj, dec=cat_dec_obj, art_ra=art_ra, art_dec=art_dec
+     ra=art_ra
+     dec=art_dec
+  endif
+  
+  ;;print,ra,' == ',art_ra,', ',dec,' == ',art_dec
+  
   GCIRC, 2, ra, dec, ra_prev, dec_prev, dist_arcsec
-  print, ra, dec, ra_prev, dec_prev,format='(4f18.6)'
+  ;;print, ra, dec, ra_prev, dec_prev,format='(4f18.6)'
   ;;print,'*** Angular offset from previous target, deg:',(dist_arcsec/60./60.)
 
   ;;art=LONARR(art_strip_num,art_strip_num)
