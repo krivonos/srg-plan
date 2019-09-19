@@ -21,7 +21,7 @@
 ;;@REPLICATE_VECTOR.pro
 
 
-pro ART_SView_beta, year=year, month=month, day=day, hour=hour, min=min, sec=sec, ra=ra, dec=dec, $
+pro art_sview_beta, year=year, month=month, day=day, hour=hour, min=min, sec=sec, ra=ra, dec=dec, $
                     art_ra=art_ra, art_dec=art_dec, $
                     ero_ra=ero_ra, ero_dec=ero_dec
 

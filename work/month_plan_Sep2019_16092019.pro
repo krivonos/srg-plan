@@ -12,10 +12,9 @@ pro month_plan_Sep2019_16092019
   npol='RG_MonthPlan_2019-09_v04.txt'
   read_month_plan_npol,npol
   
-  fout=make_output_filename(prefix='P',postfix='RK',version='12')
+  fout=make_output_filename(prefix='P',postfix='RK',version='13')
   
-  info={INFO, AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru', replaces:'P_PLAN_190916_620611200_623289600_RK_v11.fits'}
-
+  info={INFO, AUTHOR:'Roman Krivonos', EMAIL:'krivonos@cosmos.ru', replaces:'P_PLAN_190919_620611200_623289600_RK_v12.fits'}
 
   ;;
   ;; Init UDS field, nominal, original coordinates
@@ -257,6 +256,16 @@ pro month_plan_Sep2019_16092019
                     shift=shift, table=table, target='4U 1538-522 seance',relax_time=0, start_with_slew=0, $
                     cat_ra_obj=235.597347d, cat_dec_obj=-52.385994d, object='4U_1538m522')
 
+  date=[2019, 09, 22, 2, 20]
+  shift=0.0d
+  shift=observation(date=date, texp=760, obsid='11910017002', $
+                    shift=shift, table=table, target='Crab Nebula',relax_time=0, start_with_slew=0, $
+                    cat_ra_obj=83.63308d, cat_dec_obj=22.0145d, object='Crab')
+
+
+
+  
+  
 ;;  date=[2019, 09, 20, 01, 30]
 ;;  shift=0.0d
 ;;  shift=observation(date=date, texp=180, ra=235.92368d, dec=-52.339289d, obsid='11910027002', $
