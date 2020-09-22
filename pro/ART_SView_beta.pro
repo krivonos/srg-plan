@@ -33,7 +33,9 @@ CatPos = [ra, dec] ; 4U 1538-522 for ART-XC
 
 
 ;Qcorr = [ -0.0269275087805867d0,      -0.0012974798150874d0,      -0.0010326590297526d0,       0.9996360134730687d0] ; 2-nd release
-Qcorr = [ -0.0170407534937525d0,      -0.0013956210322403d0,      -0.0011146951027288d0,       0.9998532004335073d0]  ; 3-rd release
+;Qcorr = [ -0.0170407534937525d0,      -0.0013956210322403d0,      -0.0011146951027288d0,       0.9998532004335073d0] ; 3-rd release
+;Qcorr = [ -0.0195185779691185, -0.0013020903011073, -0.0010402314992481, 0.9997850481436712] ; 3-rd release
+Qcorr = [ -0.005184183281865d0, -0.00131558905190451d0, -0.00100668117147279d0, 0.999985189921414d0] ; 5 release, mean 2
 vvv_art = qtvrot([1.d0, 0.d0, 0.d0], Qcorr)
 
 Qcorr_e = [-0.00194013400307d0,        -0.00100054863679d0,        -0.00139211809704d0,         0.99999664838922d0]     ; eROSITA correction quaternion
@@ -101,7 +103,9 @@ VdcXq2_e = NORMALIZE(reform(QTVROT(VdcXq1_e, q2_e)))
 VdcYq2_e = NORMALIZE(reform(QTVROT(VdcYq1_e, q2_e)))
 VdcZq2_e = NORMALIZE(reform(QTVROT(VdcZq1_e, q2_e)))
 
+print, 'Sun pos for ',jd
 sunpos, jd, ra_Sun, dec_Sun   ; Calc RA and DEC position of the Sun for a given JDate
+print,jd, ra_Sun, dec_Sun
 Vsun =NORMALIZE(CV_COORD(FROM_SPHERE=[ra_Sun, dec_Sun, 1.d0], /TO_RECT, /DEGREES))
 
 VScSunN = NORMALIZE(CROSSP(Vsun, VdcXq2))

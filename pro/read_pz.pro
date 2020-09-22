@@ -1,11 +1,17 @@
-pro read_pz, filename, key=key, root=root, table=table, load_date=load_date
+pro read_pz, filename, key=key, root=root, table=table, load_date=load_date, zone=zone
 
-;;  COMMON NPOL, mjd_start, mjd_stop, seance_id, seance_name, hdr_start, hdr_stop, seance_guid, ra_prev, dec_prev, delta_ra, delta_dec
+  COMMON NPOL, obsid_prev
   @art
   if(n_elements(root) eq 0) then begin 
      root=getenv('SRG_MONTH_PLAN_NPOL')
   endif
 
+  if(n_elements(zone) eq 0) then begin 
+     zone='utc'
+  endif
+
+  dummy='00000000000'
+  
   if(n_elements(key) eq 0) then begin 
      key='EXPERIMENT' 
   endif
@@ -74,11 +80,30 @@ pro read_pz, filename, key=key, root=root, table=table, load_date=load_date
            ra_value=0.0
            dec_value=0.0
         endelse
-        
-        tmp_value = STRMID(str_stop, strpos(str_stop,'=')+2)
-        tmp_value2 = STRMID(tmp_value, 0, strpos(tmp_value,'!'))
-        experiment_value = STRTRIM(tmp_value2, 2)
 
+        tmp_str_stop=STRTRIM(str_stop,2)
+        tmp_stop = STRTRIM(STRMID(tmp_str_stop, strpos(tmp_str_stop,'!')+1),2)
+        if(tmp_stop eq 'stop') then begin
+           print,'INFO: set dummy obsid ',dummy
+           experiment_value = dummy
+        endif else begin
+           tmp_value = STRMID(str_stop, strpos(str_stop,'=')+2)
+           tmp_value2 = STRMID(tmp_value, 0, strpos(tmp_value,'!'))
+           experiment_value = STRTRIM(tmp_value2, 2)
+        endelse
+        
+
+        if not (ISA(obsid_prev, /STRING)) then begin
+           obsid_prev=experiment_value
+           print,'NOT DEFINED'
+        endif else begin
+        endelse
+        if(obsid_prev eq experiment_value and experiment_value ne dummy) then begin
+           print, 'SKIP DUPLICATION ',obsid_prev,' --> ',experiment_value
+           continue
+        endif
+           
+        
         stop_value = STRTRIM(STRMID(str_stop, 0, strpos(str_stop,'!')),2)
         start_value = STRTRIM(STRMID(str_start, 0, strpos(str_start,'!')),2)
         
@@ -88,14 +113,29 @@ pro read_pz, filename, key=key, root=root, table=table, load_date=load_date
         ;;;;;;;;;;;;;;;;;;;;
         ;; CONVERT TO MSK ;;
         ;;;;;;;;;;;;;;;;;;;;
-        
-        juldate, [start_year, start_month, start_day, start_hour+3, start_min], start
-        juldate, [stop_year, stop_month, stop_day, stop_hour+3, stop_min], stop
+        if (zone eq 'utc') then begin
+           juldate, [start_year, start_month, start_day, start_hour+3, start_min], mjd_start_msk
+           juldate, [stop_year, stop_month, stop_day, stop_hour+3, stop_min], mjd_stop_msk
+           
+           juldate, [start_year, start_month, start_day, start_hour, start_min], mjd_start_utc
+           juldate, [stop_year, stop_month, stop_day, stop_hour, stop_min], mjd_stop_utc
+        endif else if (zone eq 'msk') then begin
+           juldate, [start_year, start_month, start_day, start_hour, start_min], mjd_start_msk
+           juldate, [stop_year, stop_month, stop_day, stop_hour, stop_min], mjd_stop_msk
+
+           juldate, [start_year, start_month, start_day, start_hour-3, start_min], mjd_start_utc
+           juldate, [stop_year, stop_month, stop_day, stop_hour-3, stop_min], mjd_stop_utc
+        endif else if (diff lt thres2) then begin
+           message,'Time zone is not known: '+zone
+        endif
 
         ;; correct MJD by 0.5 to be consistent with HEASARC
         ;; https://heasarc.gsfc.nasa.gov/cgi-bin/Tools/xTime/xTime.pl
-        start-=0.5d
-        stop-=0.5d
+        mjd_start_msk-=0.5d
+        mjd_stop_msk-=0.5d
+
+        mjd_start_utc-=0.5d
+        mjd_stop_utc-=0.5d
 
 
         ;;CALDAT, start+JD_SHIFT, Month , Day , Year , Hour , Minute , Second
@@ -111,20 +151,26 @@ pro read_pz, filename, key=key, root=root, table=table, load_date=load_date
         ;;push,pz_dec,double(dec_value)
         ;;push,pz_experiment,experiment_value
 
-        print_mjd_utc, start, shift=0.0d, texp=0L, start=start_utc, stop=tmp
-        print_mjd_utc, stop, shift=0.0d, texp=0L, start=tmp, stop=stop_utc
+        print_mjd_msk, mjd_start_msk, shift=0.0d, texp=0L, start=start_msk, stop=tmp
+        print_mjd_msk, mjd_stop_msk, shift=0.0d, texp=0L, start=tmp, stop=stop_msk
         
-        obt_start=(start-MJDREF)*86400.0d0
-        obt_stop=(stop-MJDREF)*86400.0d0
+        print_mjd_utc, mjd_start_utc, shift=0.0d, texp=0L, start=start_utc, stop=tmp
+        print_mjd_utc, mjd_stop_utc, shift=0.0d, texp=0L, start=tmp, stop=stop_utc
+
+        obt_start=0.0 ;;(start-MJDREF)*86400.0d0
+        obt_stop=0.0;;(stop-MJDREF)*86400.0d0
         
-        push_table_pz, double(ra_value), double(dec_value), experiment_value, start_utc, stop_utc, $
+        push_table_pz, double(ra_value), double(dec_value), experiment_value, start_msk, stop_msk, $
                        q1=double(str_q1), q2=double(str_q2), q3=double(str_q3), q4=double(str_q4), $
                        table=table, start_npol=start_value, stop_npol=stop_value, load_stamp=load_stamp, $
-                       mjd_start=start, mjd_stop=stop, $
-                       obt_start=obt_start, obt_stop=obt_stop
+                       mjd_start=mjd_start_utc, mjd_stop=mjd_stop_utc, $
+                       start_utc=start_utc, stop_utc=stop_utc,$
+                       obt_start=obt_start, obt_stop=obt_stop, filename=filename
         
-        print,'pz',String(id,format='(i03)'),' -> ',start_value,(start),', ',stop_value,(stop), ' / ',experiment_value,format='(4a,1x,f12.4,2a,1x,f12.4,2a)'
+        print,'pz',String(id,format='(i03)'),' -> ',start_value,(mjd_start_utc),', ',stop_value,(mjd_stop_utc), ' / ',experiment_value,format='(4a,1x,f12.4,2a,1x,f12.4,2a)'
         id+=1
+        obsid_prev=experiment_value
+           
      endif
   endfor
 end

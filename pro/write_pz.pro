@@ -5,6 +5,15 @@ pro write_pz,filename=filename, append=append, table=table
   if(n_elements(append) eq 0) then append=0  
   if not (append) then file_delete,filename,/ALLOW_NONEXISTENT
 
+  for i=0L, n_elements(table)-2 do begin
+     delta=(table[i+1].mjd_start-table[i].mjd_stop)*24*60
+     if(delta gt 60) then begin
+        print,table[i].experiment
+        print,table[i+1].experiment
+     endif
+  endfor
+  
+  
   FXBHMAKE, hdr, n_elements(a), 'OBSERVATION'
   sxaddpar, hdr, 'OBSMODE', 'OBSERVATION', ' Possible values: OBSERVATION, SCAN, SURVEY'
   
